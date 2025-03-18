@@ -15,7 +15,7 @@ const Hero = () => {
             </p>
             <CustomButton
                 title="Explore Cars"
-                containerStyles="bg-primary-blue text-white rounded-full mt-10"
+                containerStyles="bg-primary-blue text-white rounded-full mt-10 py-2 px-6"
                 handleClick={handleScroll}
             />
             <div className="hero__image-container">
