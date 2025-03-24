@@ -18,7 +18,7 @@ const Navbar = () => {
             title="Sign In"
             btnType="button"
             containerStyles="text-primary-blue rounded-full bg-white min-w-[130px]"
-            handleClick={() => console.log('Sign In')}
+            handleClick={() => router.push('/signin')}
           />
 
           <CustomButton
