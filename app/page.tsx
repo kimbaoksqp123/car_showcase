@@ -4,14 +4,15 @@ import { fuels, yearsOfProduction } from "@/constants";
 import { CarCard, ShowMore, SearchBar, CustomFilter, Hero } from "@/components";
 
 export default async function Home({ searchParams }: HomeProps) {
-  // const params = await searchParams;
-  const allCars = await fetchCars({
-    manufacturer: searchParams.manufacturer || "",
-    year: searchParams.year || 2022,
-    fuel: searchParams.fuel || "",
-    model: searchParams.model || "",
+  // Properly handle searchParams by awaiting and type casting
+  const params = await Promise.resolve({
+    manufacturer: String(searchParams?.manufacturer || ""),
+    year: Number(searchParams?.year || 2022),
+    fuel: String(searchParams?.fuel || ""),
+    model: String(searchParams?.model || ""),
   });
 
+  const allCars = await fetchCars(params);
 
   const isDataEmpty = !Array.isArray(allCars) || allCars.length < 1 || !allCars;
 
