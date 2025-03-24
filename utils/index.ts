@@ -1,4 +1,5 @@
 import { CarProps, FilterProps } from "@/types";
+import axios from 'axios';
 
 export const calculateCarRent = (city_mpg: number, year: number) => {
   const basePricePerDay = 50; // Base rental price per day in dollars
@@ -45,23 +46,29 @@ export async function fetchCars(filters: FilterProps) {
   const { manufacturer, year, model, fuel } = filters;
 
   // Set the required headers for the API request
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     "X-RapidAPI-Key": process.env.NEXT_PUBLIC_RAPID_API_KEY || "",
     "X-RapidAPI-Host": "cars-by-api-ninjas.p.rapidapi.com",
   };
 
-  // Set the required headers for the API request
-  const response = await fetch(
-    `https://cars-by-api-ninjas.p.rapidapi.com/v1/cars?make=${manufacturer}&year=${year}&model=${model}&fuel_type=${fuel}`,
-    {
-      headers: headers,
-    }
-  );
-
-  // Parse the response as JSON
-  const result = await response.json();
-
-  return result;
+  try {
+    const response = await axios.get(
+      `https://cars-by-api-ninjas.p.rapidapi.com/v1/cars`, {
+        params: {
+          make: manufacturer,
+          year: year,
+          model: model,
+          fuel_type: fuel
+        },
+        headers: headers
+      }
+    );
+    
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching cars:", error);
+    return { message: "Failed to fetch cars data" };
+  }
 }
 
 export const generateCarImageUrl = (car: CarProps, angle?: string) => {

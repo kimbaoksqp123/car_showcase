@@ -5,17 +5,19 @@ import { Fragment, useState } from 'react';
 import Link from 'next/link';
 
 type Inputs = {
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
+  confirm_password: string;
 };
 
 const SignUp = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
+  const { register, handleSubmit, formState: { errors }, getValues } = useForm<Inputs>();
   const [isOpen, setIsOpen] = useState(true);
   
   const onSubmit: SubmitHandler<Inputs> = data => {
     console.log("Form data:", data);
-    alert(`Email: ${data.email}\nPassword: ${data.password}`);
     // Xử lý logic đăng ký ở đây
   };
 
@@ -55,6 +57,34 @@ const SignUp = () => {
                   </DialogTitle>
                   
                   <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+                    <div className="flex gap-4">
+                      <Field className="space-y-1 w-1/2">
+                        <Label className="block text-sm font-medium text-gray-700">
+                          First Name
+                        </Label>
+                        <Input
+                          type="text"
+                          placeholder="First name"
+                          {...register('first_name', { required: 'First name is required' })}
+                          className="w-full border border-gray-300 p-2 rounded focus:outline-none data-[focus]:ring-2 data-[focus]:ring-primary-blue"
+                        />
+                        {errors.first_name && <span className="text-red-500 text-sm">{errors.first_name.message}</span>}
+                      </Field>
+
+                      <Field className="space-y-1 w-1/2">
+                        <Label className="block text-sm font-medium text-gray-700">
+                          Last Name
+                        </Label>
+                        <Input
+                          type="text"
+                          placeholder="Last name"
+                          {...register('last_name', { required: 'Last name is required' })}
+                          className="w-full border border-gray-300 p-2 rounded focus:outline-none data-[focus]:ring-2 data-[focus]:ring-primary-blue"
+                        />
+                        {errors.last_name && <span className="text-red-500 text-sm">{errors.last_name.message}</span>}
+                      </Field>
+                    </div>
+
                     <Field className="space-y-1">
                       <Label className="block text-sm font-medium text-gray-700">
                         Email
@@ -62,7 +92,13 @@ const SignUp = () => {
                       <Input
                         type="email"
                         placeholder="Enter your email"
-                        {...register('email', { required: 'Email is required' })}
+                        {...register('email', { 
+                          required: 'Email is required',
+                          pattern: {
+                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                            message: 'Invalid email address'
+                          }
+                        })}
                         className="w-full border border-gray-300 p-2 rounded focus:outline-none data-[focus]:ring-2 data-[focus]:ring-primary-blue"
                       />
                       {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
@@ -82,6 +118,22 @@ const SignUp = () => {
                         className="w-full border border-gray-300 p-2 rounded focus:outline-none data-[focus]:ring-2 data-[focus]:ring-primary-blue"
                       />
                       {errors.password && <span className="text-red-500 text-sm">{errors.password.message}</span>}
+                    </Field>
+
+                    <Field className="space-y-1">
+                      <Label className="block text-sm font-medium text-gray-700">
+                        Confirm Password
+                      </Label>
+                      <Input
+                        type="password"
+                        placeholder="Confirm password"
+                        {...register('confirm_password', { 
+                          required: 'Confirm Password is required',
+                          validate: value => value === getValues('password') || 'Passwords do not match'
+                        })}
+                        className="w-full border border-gray-300 p-2 rounded focus:outline-none data-[focus]:ring-2 data-[focus]:ring-primary-blue"
+                      />
+                      {errors.confirm_password && <span className="text-red-500 text-sm">{errors.confirm_password.message}</span>}
                     </Field>
                     
                     <button

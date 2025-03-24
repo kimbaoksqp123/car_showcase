@@ -15,6 +15,13 @@ const Navbar = () => {
 
         <div className='flex-1 flex justify-center items-center'>
           <CustomButton
+            title="Register Vehicle"
+            btnType="button"
+            containerStyles="text-primary-blue rounded-full bg-white min-w-[130px] mr-2"
+            handleClick={() => router.push('/vehicle-registration')}
+          />
+
+          <CustomButton
             title="Sign In"
             btnType="button"
             containerStyles="text-primary-blue rounded-full bg-white min-w-[130px]"
