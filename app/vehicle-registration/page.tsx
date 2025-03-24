@@ -3,8 +3,10 @@ import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { Dialog, Transition, TransitionChild, DialogPanel, DialogTitle, Field, Label, Input } from '@headlessui/react';
 import { Fragment, useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useVehicleData } from '@/lib/hooks/useVehicleData';
 import { VehicleType } from '@/lib/api';
+import { useAppDispatch, useAppSelector, setVehicleRegistration } from '@/lib/redux';
 
 type VehicleRegistrationInputs = {
   vehicleType: VehicleType;
@@ -17,10 +19,19 @@ type VehicleRegistrationInputs = {
 };
 
 const VehicleRegistration = () => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const savedData = useAppSelector((state) => state.vehicle);
+  
   const { register, handleSubmit, formState: { errors }, control, watch, setValue } = useForm<VehicleRegistrationInputs>({
     defaultValues: {
-      vehicleType: VehicleType.CARS,
-      quantity: 1
+      vehicleType: savedData.vehicleType as VehicleType || VehicleType.CARS,
+      vehicleBrand: savedData.vehicleBrand || '',
+      vehicleModel: savedData.vehicleModel || '',
+      quantity: savedData.quantity || 1,
+      purchaseDate: savedData.purchaseDate || '',
+      buyerName: savedData.buyerName || '',
+      phoneNumber: savedData.phoneNumber || ''
     }
   });
   
@@ -53,8 +64,12 @@ const VehicleRegistration = () => {
   
   const onSubmit: SubmitHandler<VehicleRegistrationInputs> = data => {
     console.log("Form data:", data);
-    alert(`Vehicle registration successful!\nVehicle: ${data.vehicleType} - ${data.vehicleBrand} ${data.vehicleModel}\nBuyer: ${data.buyerName}`);
-    // Here you would typically submit the data to your backend
+    
+    // Lưu dữ liệu vào Redux store
+    dispatch(setVehicleRegistration(data));
+    
+    // Chuyển hướng đến trang xác nhận
+    router.push('/vehicle-registration-confirm');
   };
 
   return (
@@ -256,7 +271,7 @@ const VehicleRegistration = () => {
                       className="bg-primary-blue text-white rounded-full py-2 px-4 mt-4 hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue"
                       disabled={loading}
                     >
-                      Register Vehicle
+                      Continue to Confirmation
                     </button>
                     
                     <div className="mt-2 text-center text-sm text-gray-500">
