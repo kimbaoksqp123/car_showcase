@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { authApi } from '@/lib/api/authApi';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '@/lib/redux/features/authSlice';
 
 type Inputs = {
   email: string;
@@ -12,6 +14,7 @@ type Inputs = {
 
 const SignIn = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   
@@ -26,6 +29,12 @@ const SignIn = () => {
       // Lưu token và thông tin user vào localStorage
       localStorage.setItem('accessToken', response.accessToken);
       localStorage.setItem('userInfo', JSON.stringify(response.user));
+      
+      // Cập nhật Redux store
+      dispatch(setCredentials({
+        user: response.user,
+        accessToken: response.accessToken
+      }));
       
       // Chuyển hướng về trang chủ
       router.push('/');

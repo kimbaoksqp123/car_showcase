@@ -1,6 +1,9 @@
 import { Fragment } from 'react'
-import { Menu,MenuButton, MenuItems, Transition, MenuItem } from '@headlessui/react'
+import { Menu, MenuButton, MenuItems, Transition, MenuItem } from '@headlessui/react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { useDispatch } from 'react-redux'
+import { logout } from '@/lib/redux/features/authSlice'
 
 interface UserProfileProps {
   user: {
@@ -11,6 +14,22 @@ interface UserProfileProps {
 }
 
 export default function UserProfile({ user }: UserProfileProps) {
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    // Xóa thông tin user và token khỏi localStorage
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('userInfo');
+    
+    // Dispatch logout action
+    dispatch(logout());
+    
+    // Chuyển hướng về trang chủ
+    router.push('/');
+    router.refresh(); // Refresh để cập nhật UI
+  };
+
   return (
     <Menu as="div" className="relative inline-block text-left">
       <MenuButton className="inline-flex w-full justify-center items-center">
@@ -48,10 +67,7 @@ export default function UserProfile({ user }: UserProfileProps) {
                   className={`${
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
                   } group flex w-full items-center px-4 py-2 text-sm`}
-                  onClick={() => {
-                    // Logout logic will be implemented later
-                    console.log('Logout clicked');
-                  }}
+                  onClick={handleLogout}
                 >
                   Logout
                 </button>

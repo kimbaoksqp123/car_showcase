@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { VehicleType } from '../api/types/vehicle';
+import { VehicleType } from '@/lib/api/types/vehicle';
 
 export interface VehicleRegistrationState {
   vehicleType: VehicleType | string;

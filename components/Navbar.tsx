@@ -4,21 +4,12 @@ import Image from 'next/image'
 import CustomButton from './CustomButton'
 import UserProfile from './UserProfile'
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/lib/redux/store';
 
 const Navbar = () => {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    // Kiểm tra xem có token và user info trong localStorage không
-    const accessToken = localStorage.getItem('accessToken');
-    const userInfo = localStorage.getItem('userInfo');
-    
-    if (accessToken && userInfo) {
-      setUser(JSON.parse(userInfo));
-    }
-  }, []);
+  const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   return (
     <header className='w-full absolute z-10'>
@@ -35,7 +26,7 @@ const Navbar = () => {
             handleClick={() => router.push('/vehicle-registration')}
           />
 
-          {user ? (
+          {isAuthenticated && user ? (
             <UserProfile user={user} />
           ) : (
             <>
