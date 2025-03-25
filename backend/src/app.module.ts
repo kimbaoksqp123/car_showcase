@@ -1,55 +1,29 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthenticationModule } from './authentication/authentication.module';
 import { UsersModule } from './users/users.module';
-import { VehiclesModule } from './vehicles/vehicles.module';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { AuthenticationModule } from './authentication/authentication.module';
+import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
-import { ResponseInterceptor } from './common/interceptors/response.interceptor';
-import configuration from './config/configuration';
+import { config } from './config/config';
+import { TypeOrmConfigService } from './config/database/typeorm.config';
 
 @Module({
   imports: [
-    // Cấu hình biến môi trường
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [configuration],
+      load: [config],
     }),
-    
-    // Cấu hình TypeORM
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
-        host: configService.get('database.host'),
-        port: configService.get('database.port'),
-        username: configService.get('database.username'),
-        password: configService.get('database.password'),
-        database: configService.get('database.name'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: configService.get('database.synchronize'),
-        logging: configService.get('database.logging'),
-      }),
+      useClass: TypeOrmConfigService,
     }),
-
-    // Các module của ứng dụng
-    AuthenticationModule,
     UsersModule,
-    VehiclesModule,
+    AuthenticationModule,
   ],
-  controllers: [],
   providers: [
-    // Áp dụng JWT Guard cho toàn bộ ứng dụng
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
-    },
-    // Áp dụng Response Interceptor cho toàn bộ ứng dụng
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ResponseInterceptor,
     },
   ],
 })

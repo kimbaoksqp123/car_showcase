@@ -39,8 +39,8 @@ export class UsersController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a user by ID (admin only)' })
-  @ApiParam({ name: 'id', description: 'User ID' })
-  findOne(@Param('id') id: string, @CurrentUser() currentUser: User) {
+  @ApiParam({ name: 'id', description: 'User ID', type: 'number' })
+  findOne(@Param('id') id: number, @CurrentUser() currentUser: User) {
     // Check if the user is an admin or the user is retrieving their own info
     if (!currentUser.isAdmin && id !== currentUser.id) {
       return { message: 'Access denied' };
@@ -50,9 +50,9 @@ export class UsersController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a user' })
-  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiParam({ name: 'id', description: 'User ID', type: 'number' })
   update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateUserDto: UpdateUserDto,
     @CurrentUser() currentUser: User,
   ) {
@@ -68,11 +68,11 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete a user' })
-  @ApiParam({ name: 'id', description: 'User ID' })
-  remove(@Param('id') id: string, @CurrentUser() currentUser: User) {
-    // Check if the user is an admin or the user is deleting their own account
-    if (!currentUser.isAdmin && id !== currentUser.id) {
+  @ApiOperation({ summary: 'Delete a user (admin only)' })
+  @ApiParam({ name: 'id', description: 'User ID', type: 'number' })
+  remove(@Param('id') id: number, @CurrentUser() currentUser: User) {
+    // Only admin can delete users
+    if (!currentUser.isAdmin) {
       return { message: 'Access denied' };
     }
     return this.usersService.remove(id);

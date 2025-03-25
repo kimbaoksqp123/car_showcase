@@ -6,18 +6,16 @@ import {
   UpdateDateColumn,
   BeforeInsert,
   BeforeUpdate,
-  OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { Vehicle } from '../../vehicles/entities/vehicle.entity';
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   @ApiProperty({ description: 'Unique identifier of the user' })
-  id: string;
+  id: number;
 
   @Column({ length: 100 })
   @ApiProperty({ description: 'User first name' })
@@ -38,9 +36,6 @@ export class User {
   @Column({ default: false })
   @ApiProperty({ description: 'Whether the user is an admin' })
   isAdmin: boolean;
-
-  @OneToMany(() => Vehicle, (vehicle) => vehicle.user)
-  vehicles: Vehicle[];
 
   @CreateDateColumn()
   @ApiProperty({ description: 'Date when the user was created' })
