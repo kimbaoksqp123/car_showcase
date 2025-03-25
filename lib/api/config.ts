@@ -2,8 +2,11 @@
  * API Configuration and Constants
  */
 
+export const BACKEND_URL = 'http://localhost:3001/api';
+
 export const API_ENDPOINTS = {
   FIPE: 'https://parallelum.com.br/fipe/api/v1',
+  AUTH: `${BACKEND_URL}/auth`,
 };
 
 export const API_TIMEOUT = 30000; // 30 seconds
