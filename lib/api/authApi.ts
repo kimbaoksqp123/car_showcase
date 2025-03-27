@@ -7,16 +7,28 @@ interface LoginRequest {
   password: string;
 }
 
-interface LoginResponse {
-  user: {
-    id: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    isAdmin: boolean;
-  };
+interface SignUpRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
+interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  isAdmin: boolean;
+}
+
+interface AuthResponse {
+  user: User;
   accessToken: string;
 }
+
+type LoginResponse = AuthResponse;
+type SignUpResponse = AuthResponse;
 
 class AuthApi {
   private httpClient: HttpClient;
@@ -30,7 +42,16 @@ class AuthApi {
   async login(data: LoginRequest): Promise<LoginResponse> {
     try {
       const response: AxiosResponse<LoginResponse> = await this.httpClient.post('/login', data);
-        return response;
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async signup(data: SignUpRequest): Promise<SignUpResponse> {
+    try {
+      const response: AxiosResponse<SignUpResponse> = await this.httpClient.post('/register', data);
+      return response.data;
     } catch (error) {
       throw error;
     }

@@ -3,10 +3,15 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Dialog, Transition, TransitionChild, DialogPanel, DialogTitle, Field, Label, Input } from '@headlessui/react';
 import { Fragment, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '@/lib/redux/features/authSlice';
+import { authApi } from '@/lib/api/authApi';
+import toast from 'react-hot-toast';
 
 type Inputs = {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   confirm_password: string;
@@ -15,10 +20,44 @@ type Inputs = {
 const SignUp = () => {
   const { register, handleSubmit, formState: { errors }, getValues } = useForm<Inputs>();
   const [isOpen, setIsOpen] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>('');
+  const router = useRouter();
+  const dispatch = useDispatch();
   
-  const onSubmit: SubmitHandler<Inputs> = data => {
-    console.log("Form data:", data);
-    // Xử lý logic đăng ký ở đây
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    try {
+      setError('');
+      setIsLoading(true);
+      const { confirm_password, ...signupData } = data;
+      
+      const response = await authApi.signup(signupData);
+      
+      // Store the access token and user info
+      localStorage.setItem('accessToken', response.accessToken);
+      localStorage.setItem('userInfo', JSON.stringify(response.user));
+      
+      // Update Redux store
+      dispatch(setCredentials({
+        user: response.user,
+        accessToken: response.accessToken
+      }));
+
+      // Show success message
+      toast.success('Sign up successful! Redirecting...');
+      
+      // Wait for 1 second before redirecting
+      setTimeout(() => {
+        router.push('/');
+        router.refresh(); // Refresh the page to ensure state is updated
+      }, 1000);
+      
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to sign up');
+      toast.error(err.response?.data?.message || 'Failed to sign up');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -56,6 +95,12 @@ const SignUp = () => {
                     Sign Up
                   </DialogTitle>
                   
+                  {error && (
+                    <div className="text-red-500 text-sm mb-4">
+                      {error}
+                    </div>
+                  )}
+                  
                   <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
                     <div className="flex gap-4">
                       <Field className="space-y-1 w-1/2">
@@ -65,10 +110,14 @@ const SignUp = () => {
                         <Input
                           type="text"
                           placeholder="First name"
-                          {...register('first_name', { required: 'First name is required' })}
+                          {...register('firstName', { 
+                            required: 'First name is required',
+                            minLength: { value: 2, message: 'First name must be at least 2 characters' }
+                          })}
                           className="w-full border border-gray-300 p-2 rounded focus:outline-none data-[focus]:ring-2 data-[focus]:ring-primary-blue"
+                          disabled={isLoading}
                         />
-                        {errors.first_name && <span className="text-red-500 text-sm">{errors.first_name.message}</span>}
+                        {errors.firstName && <span className="text-red-500 text-sm">{errors.firstName.message}</span>}
                       </Field>
 
                       <Field className="space-y-1 w-1/2">
@@ -78,10 +127,14 @@ const SignUp = () => {
                         <Input
                           type="text"
                           placeholder="Last name"
-                          {...register('last_name', { required: 'Last name is required' })}
+                          {...register('lastName', { 
+                            required: 'Last name is required',
+                            minLength: { value: 2, message: 'Last name must be at least 2 characters' }
+                          })}
                           className="w-full border border-gray-300 p-2 rounded focus:outline-none data-[focus]:ring-2 data-[focus]:ring-primary-blue"
+                          disabled={isLoading}
                         />
-                        {errors.last_name && <span className="text-red-500 text-sm">{errors.last_name.message}</span>}
+                        {errors.lastName && <span className="text-red-500 text-sm">{errors.lastName.message}</span>}
                       </Field>
                     </div>
 
@@ -100,6 +153,7 @@ const SignUp = () => {
                           }
                         })}
                         className="w-full border border-gray-300 p-2 rounded focus:outline-none data-[focus]:ring-2 data-[focus]:ring-primary-blue"
+                        disabled={isLoading}
                       />
                       {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
                     </Field>
@@ -116,6 +170,7 @@ const SignUp = () => {
                           minLength: { value: 6, message: 'Password must be at least 6 characters' }
                         })}
                         className="w-full border border-gray-300 p-2 rounded focus:outline-none data-[focus]:ring-2 data-[focus]:ring-primary-blue"
+                        disabled={isLoading}
                       />
                       {errors.password && <span className="text-red-500 text-sm">{errors.password.message}</span>}
                     </Field>
@@ -132,15 +187,17 @@ const SignUp = () => {
                           validate: value => value === getValues('password') || 'Passwords do not match'
                         })}
                         className="w-full border border-gray-300 p-2 rounded focus:outline-none data-[focus]:ring-2 data-[focus]:ring-primary-blue"
+                        disabled={isLoading}
                       />
                       {errors.confirm_password && <span className="text-red-500 text-sm">{errors.confirm_password.message}</span>}
                     </Field>
                     
                     <button
                       type="submit"
-                      className="bg-primary-blue text-white rounded-full py-2 px-4 mt-4 hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue"
+                      className="bg-primary-blue text-white rounded-full py-2 px-4 mt-4 hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={isLoading}
                     >
-                      Create Account
+                      {isLoading ? 'Creating Account...' : 'Create Account'}
                     </button>
                     
                     <div className="mt-2 text-center text-sm text-gray-500">
