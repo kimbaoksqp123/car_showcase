@@ -42,7 +42,7 @@ class AuthApi {
   async login(data: LoginRequest): Promise<LoginResponse> {
     try {
       const response: AxiosResponse<LoginResponse> = await this.httpClient.post('/login', data);
-      return response.data;
+      return response;
     } catch (error) {
       throw error;
     }
