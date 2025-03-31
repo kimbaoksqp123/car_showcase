@@ -2,43 +2,6 @@
 
 A modern web application for showcasing and managing cars built with Next.js 15, TypeScript, and Tailwind CSS.
 
-## Project Structure
-
-The project follows the Next.js 15 recommended directory structure:
-
-```
-/
-├── src/
-│   ├── app/              # App routes and pages
-│   ├── components/       # Reusable UI components
-│   ├── lib/              # Utility libraries
-│   │   ├── api/          # API integrations
-│   │   ├── hooks/        # Custom React hooks
-│   │   ├── providers/    # Context providers
-│   │   ├── redux/        # Redux state management
-│   │   └── types/        # Type definitions
-│   ├── utils/            # Utility functions
-│   └── constants/        # Constants and configuration
-├── public/               # Static assets
-├── backend/              # Backend server code (NestJS)
-└── ...config files
-```
-
-## Import Conventions
-
-All imports should use absolute paths with the `@/` prefix:
-
-```typescript
-// Correct
-import { Component } from '@/components/Component';
-import { someUtil } from '@/utils';
-import { CONSTANTS } from '@/constants';
-
-// Incorrect
-import { Component } from '../../components/Component';
-import { someUtil } from '../utils';
-```
-
 ## Features
 
 - Car browsing and filtering
@@ -47,12 +10,10 @@ import { someUtil } from '../utils';
 - Vehicle registration
 - Responsive design
 
-## Development
-
 ### Prerequisites
 
 - Node.js 18+
-- npm or pnpm
+- npm
 
 ### Setup
 
@@ -60,17 +21,11 @@ import { someUtil } from '../utils';
 2. Install dependencies:
    ```bash
    npm install
-   # or
-   pnpm install
-   ```
 
 3. Create a `.env.local` file with the necessary environment variables
 4. Run the development server:
    ```bash
    npm run dev
-   # or
-   pnpm dev
-   ```
 
 ## Backend
 
@@ -86,14 +41,6 @@ cd backend
 npm install
 npm run start:dev
 ```
-
-## Component Guidelines
-
-- Use functional components with TypeScript
-- Follow the naming convention: PascalCase for components
-- Place shared components in `src/components/`
-- Place page-specific components in `src/app/[page]/_components/`
-
 ## Key Dependencies
 
 - **Next.js 15.x**: React framework with App Router
