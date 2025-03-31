@@ -4,8 +4,8 @@ import { useState, useEffect, Fragment } from 'react';
 import { useRouter } from 'next/navigation';
 import { Dialog, Transition, TransitionChild, DialogPanel, DialogTitle } from '@headlessui/react';
 import { useAppSelector, useAppDispatch, clearVehicleRegistration } from '@/lib/redux';
-import { VehicleType } from '@/lib/api';
-import { apiClient } from '@/lib/api';
+import { VehicleType } from '@/lib/types/vehicle';
+import apiClient from '@/lib/api';
 
 const VehicleRegistrationConfirm = () => {
   const router = useRouter();

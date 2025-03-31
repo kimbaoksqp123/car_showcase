@@ -66,3 +66,18 @@ export interface SearchManuFacturerProps {
   manufacturer: string;
   setManuFacturer: (manufacturer: string) => void;
 }
+
+export interface FileData {
+  id?: number;
+  originalName: string;
+  filename: string;
+  path: string;
+  size: number;
+  mimetype: string;
+  uploadedAt?: string;
+}
+
+export interface UploadResponse {
+  message: string;
+  files: FileData[];
+} 

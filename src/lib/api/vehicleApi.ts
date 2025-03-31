@@ -7,7 +7,7 @@ import {
   VehicleModelResponse, 
   VehicleType, 
   VehicleYear 
-} from '@/lib/api/types/vehicle';
+} from '@/lib/types/vehicle';
 
 /**
  * Vehicle API client for accessing FIPE API endpoints

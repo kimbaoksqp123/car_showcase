@@ -5,7 +5,7 @@ import {
   VehicleYear,
   VehicleDetails,
   VehicleType,
-} from '@/lib/api/types/vehicle';
+} from '@/lib/types/vehicle';
 import { ApiError } from '@/lib/api/config';
 import apiClient from '@/lib/api';
 
