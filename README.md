@@ -1,59 +1,102 @@
-# Car Showcase
+# Car Showcase Application
 
-Modern car showcase platform built with Next.js App Router, React 19, TypeScript, and Tailwind CSS.
+A modern web application for showcasing and managing cars built with Next.js 15, TypeScript, and Tailwind CSS.
+
+## Project Structure
+
+The project follows the Next.js 15 recommended directory structure:
+
+```
+/
+├── src/
+│   ├── app/              # App routes and pages
+│   ├── components/       # Reusable UI components
+│   ├── lib/              # Utility libraries
+│   │   ├── api/          # API integrations
+│   │   ├── hooks/        # Custom React hooks
+│   │   ├── providers/    # Context providers
+│   │   ├── redux/        # Redux state management
+│   │   └── types/        # Type definitions
+│   ├── utils/            # Utility functions
+│   └── constants/        # Constants and configuration
+├── public/               # Static assets
+├── backend/              # Backend server code (NestJS)
+└── ...config files
+```
+
+## Import Conventions
+
+All imports should use absolute paths with the `@/` prefix:
+
+```typescript
+// Correct
+import { Component } from '@/components/Component';
+import { someUtil } from '@/utils';
+import { CONSTANTS } from '@/constants';
+
+// Incorrect
+import { Component } from '../../components/Component';
+import { someUtil } from '../utils';
+```
 
 ## Features
 
-- Modern responsive UI with Tailwind CSS
-- Server and client components with Next.js App Router
-- Type-safe development with TypeScript
-- Dynamic car listings and filtering
-- Advanced search functionality
-- Authentication with NextAuth.js
-- Backend API with NestJS (separate setup)
+- Car browsing and filtering
+- User authentication
+- File upload and management
+- Vehicle registration
+- Responsive design
 
-## Requirements
+## Development
 
-- Node.js 18.x or higher
-- npm 8.x or higher
+### Prerequisites
 
-## Installation
+- Node.js 18+
+- npm or pnpm
 
-1. **Clone the repository**
+### Setup
 
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   pnpm install
+   ```
+
+3. Create a `.env.local` file with the necessary environment variables
+4. Run the development server:
+   ```bash
+   npm run dev
+   # or
+   pnpm dev
+   ```
+
+## Backend
+
+The backend service is built with NestJS and includes:
+
+- Authentication (JWT)
+- File management
+- User management
+
+To run the backend separately:
 ```bash
-git clone https://github.com/kimbaoksqp123/car_showcase
-cd car_showcase
-```
-
-2. **Install dependencies**
-
-```bash
+cd backend
 npm install
+npm run start:dev
 ```
 
-3. **Configure environment variables**
+## Component Guidelines
 
-Create a `.env.local` file in the root directory with the following variables:
+- Use functional components with TypeScript
+- Follow the naming convention: PascalCase for components
+- Place shared components in `src/components/`
+- Place page-specific components in `src/app/[page]/_components/`
 
-```
-NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
-# Add other environment variables as needed
-```
-
-## Running the Application
-
-### Development
-
-```bash
-npm run dev
-```
-
-The application will be available at [http://localhost:3000](http://localhost:3000).
 ## Key Dependencies
 
 - **Next.js 15.x**: React framework with App Router
-- **React 19.x**: UI library
 - **TypeScript**: Type safety
 - **Tailwind CSS**: Utility-first CSS framework
 - **Headless UI**: Unstyled, accessible UI components

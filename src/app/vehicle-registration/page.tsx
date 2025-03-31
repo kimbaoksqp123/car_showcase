@@ -5,7 +5,7 @@ import { Fragment, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useVehicleData } from '@/lib/hooks/useVehicleData';
-import { VehicleType } from '@/lib/api';
+import { VehicleType } from '@/lib/api/types/vehicle';
 import { useAppDispatch, useAppSelector, setVehicleRegistration } from '@/lib/redux';
 
 type VehicleRegistrationInputs = {

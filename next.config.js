@@ -8,6 +8,8 @@ const nextConfig = {
       },
     ],
   },
+  // Explicitly set src directory as the root
+  reactStrictMode: true,
 };
 
-module.exports = nextConfig;
+module.exports = nextConfig; 

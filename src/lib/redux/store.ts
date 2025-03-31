@@ -1,12 +1,14 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import vehicleReducer from './features/vehicleSlice';
-import authReducer from './features/authSlice';
+import vehicleReducer from '@/lib/redux/features/vehicleSlice';
+import authReducer from '@/lib/redux/features/authSlice';
+import fileReducer from '@/lib/redux/features/fileSlice';
 
 export const store = configureStore({
   reducer: {
     vehicle: vehicleReducer,
     auth: authReducer,
+    files: fileReducer,
     // Thêm các reducer khác ở đây khi cần
   },
   middleware: (getDefaultMiddleware) => 

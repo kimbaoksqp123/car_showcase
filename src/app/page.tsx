@@ -1,16 +1,18 @@
 import { fetchCars } from "@/utils";
-import { HomeProps } from "@/types";
+import { HomeProps } from "@/lib/types/index";
 import { fuels, yearsOfProduction } from "@/constants";
 import { CarCard, ShowMore, SearchBar, CustomFilter, Hero } from "@/components";
 
 export default async function Home({ searchParams }: HomeProps) {
-  // Properly handle searchParams by awaiting and type casting
-  const params = await Promise.resolve({
-    manufacturer: String(searchParams?.manufacturer || ""),
-    year: Number(searchParams?.year || 2022),
-    fuel: String(searchParams?.fuel || ""),
-    model: String(searchParams?.model || ""),
-  });
+  // Await searchParams to fix the sync dynamic APIs error
+  const awaitedSearchParams = await searchParams;
+  
+  const params = {
+    manufacturer: String(awaitedSearchParams?.manufacturer || ""),
+    year: Number(awaitedSearchParams?.year || 2022),
+    fuel: String(awaitedSearchParams?.fuel || ""),
+    model: String(awaitedSearchParams?.model || ""),
+  };
 
   const allCars = await fetchCars(params);
 

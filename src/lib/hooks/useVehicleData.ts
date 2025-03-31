@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
-import apiClient, { 
+import { 
   VehicleBrand,
   VehicleModelResponse,
   VehicleYear,
   VehicleDetails,
   VehicleType,
-  ApiError
-} from '../api';
+} from '@/lib/api/types/vehicle';
+import { ApiError } from '@/lib/api/config';
+import apiClient from '@/lib/api';
 
 interface VehicleDataState {
   brands: VehicleBrand[];

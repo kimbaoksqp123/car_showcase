@@ -2,8 +2,8 @@
 
 import { PropsWithChildren } from 'react';
 import { Provider } from 'react-redux';
-import { store } from './redux/store';
-import AuthProvider from './providers/AuthProvider';
+import { store } from '@/lib/redux/store';
+import AuthProvider from '@/lib/providers/AuthProvider';
 
 export function Providers({ children }: PropsWithChildren) {
   return (

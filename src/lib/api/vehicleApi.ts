@@ -1,5 +1,5 @@
-import { API_ENDPOINTS } from './config';
-import { HttpClient } from './httpClient';
+import { API_ENDPOINTS } from '@/lib/api/config';
+import { HttpClient } from '@/lib/api/httpClient';
 import { 
   VehicleBrand, 
   VehicleDetails,
@@ -7,7 +7,7 @@ import {
   VehicleModelResponse, 
   VehicleType, 
   VehicleYear 
-} from './types/vehicle';
+} from '@/lib/api/types/vehicle';
 
 /**
  * Vehicle API client for accessing FIPE API endpoints

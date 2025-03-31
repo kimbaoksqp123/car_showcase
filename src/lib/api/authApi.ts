@@ -51,7 +51,7 @@ class AuthApi {
   async signup(data: SignUpRequest): Promise<SignUpResponse> {
     try {
       const response: AxiosResponse<SignUpResponse> = await this.httpClient.post('/register', data);
-      return response.data;
+      return response;
     } catch (error) {
       throw error;
     }
