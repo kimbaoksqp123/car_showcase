@@ -84,4 +84,22 @@ export class FilesService {
       }
     }
   }
+
+  async uploadFiles(files: Express.Multer.File[]): Promise<File[]> {
+    const savedFiles = [];
+
+    for (const file of files) {
+      const savedFile = await this.saveFileInfo({
+        originalName: file.originalname,
+        filename: file.filename,
+        path: file.path,
+        mimetype: file.mimetype,
+        size: file.size,
+      });
+      
+      savedFiles.push(savedFile);
+    }
+
+    return savedFiles;
+  }
 } 
