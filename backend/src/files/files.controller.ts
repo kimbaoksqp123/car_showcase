@@ -24,9 +24,9 @@ export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
   @Post('upload')
-  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Public()
   @UseInterceptors(FilesInterceptor('files', 10)) // Allow up to 10 files
-  @ApiOperation({ summary: 'Upload multiple files (admin only)' })
+  @ApiOperation({ summary: 'Upload multiple files' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -43,24 +43,28 @@ export class FilesController {
     },
   })
   async uploadFiles(@UploadedFiles() files: Express.Multer.File[]) {
-    const savedFiles = [];
+    console.log('Received files:', files?.length);
     
-    for (const file of files) {
-      const savedFile = await this.filesService.saveFileInfo({
-        originalName: file.originalname,
-        filename: file.filename,
-        path: file.path,
-        mimetype: file.mimetype,
-        size: file.size,
-      });
-      
-      savedFiles.push(savedFile);
+    if (!files || files.length === 0) {
+      console.log('No files received');
+      return {
+        message: 'No files uploaded',
+        files: [],
+      };
     }
 
-    return {
-      message: 'Files uploaded successfully',
-      files: savedFiles,
-    };
+    try {
+      const savedFiles = await this.filesService.uploadFiles(files);
+      console.log('Files saved successfully:', savedFiles.length);
+      
+      return {
+        message: 'Files uploaded successfully',
+        files: savedFiles,
+      };
+    } catch (error) {
+      console.error('Error saving files:', error);
+      throw error;
+    }
   }
 
   @Get()
