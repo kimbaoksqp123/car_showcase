@@ -37,7 +37,7 @@ export const filesApi = {
   },
   
   getAll: async (): Promise<FileData[]> => {
-    const response = await api.get('/files');
+    const response = await api.get('/api/files');
     return response.data.files;
   },
   

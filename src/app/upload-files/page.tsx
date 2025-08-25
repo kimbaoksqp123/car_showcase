@@ -63,7 +63,7 @@ export default function UploadFilesPage() {
         </div>
         
         <div className="mt-8">
-          <FileList />
+          {/* <FileList /> */}
         </div>
       </div>
     </main>

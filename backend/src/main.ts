@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
 
   // Enable CORS
   app.enableCors({
@@ -16,7 +17,15 @@ async function bootstrap() {
   });
 
   // Global validation pipe
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+    })
+  );
+
+  // Cấu hình prefix API global
+  app.setGlobalPrefix('api');
 
   // Swagger setup
   const config = new DocumentBuilder()
@@ -24,17 +33,15 @@ async function bootstrap() {
     .setDescription('The Car Showcase API description')
     .setVersion('1.0')
     .addBearerAuth()
+    .addServer('') // Add empty server to use relative URLs
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
-
-  const configService = app.get(ConfigService);
-  
-  // Cấu hình prefix API global
-  app.setGlobalPrefix('api');
-  
-
+  SwaggerModule.setup('docs', app, document);
 
   await app.listen(3001);
+  
+  const serverUrl = await app.getUrl();
+  console.log(`Application is running on: ${serverUrl}`);
+  console.log(`Swagger documentation: ${serverUrl}/docs`);
 }
-bootstrap(); 
+bootstrap();

@@ -67,20 +67,21 @@ export class FilesController {
     }
   }
 
-  @Get()
-  @UseGuards(JwtAuthGuard, AdminGuard)
-  @ApiOperation({ summary: 'Get all files (admin only)' })
-  async getAllFiles(): Promise<File[]> {
-    return this.filesService.getFiles();
-  }
+  // @Get()
+  // // @UseGuards(JwtAuthGuard, AdminGuard)
+  // @Public()
+  // @ApiOperation({ summary: 'Get all files (admin only)' })
+  // async getAllFiles(): Promise<File[]> {
+  //   return this.filesService.getFiles();
+  // }
 
-  @Get(':filename')
-  @Public() // Allow public access to view files
-  @ApiOperation({ summary: 'Get a file by filename (public)' })
-  async getFile(@Param('filename') filename: string, @Res() res: Response) {
-    const filePath = await this.filesService.getFilePath(filename);
-    res.sendFile(filePath);
-  }
+  // @Get(':filename')
+  // @Public() // Allow public access to view files
+  // @ApiOperation({ summary: 'Get a file by filename (public)' })
+  // async getFile(@Param('filename') filename: string, @Res() res: Response) {
+  //   const filePath = await this.filesService.getFilePath(filename);
+  //   res.sendFile(filePath);
+  // }
 
   @Delete(':filename')
   @UseGuards(JwtAuthGuard, AdminGuard)
