@@ -7,6 +7,7 @@ import { RootState } from '@/lib/redux/store';
 import { getAllFiles } from '@/lib/redux/features/fileSlice';
 import FileUploader from '@/components/FileUploader';
 import FileList from '@/components/FileList';
+import { toast } from 'react-hot-toast';
 
 export default function UploadFilesPage() {
   const router = useRouter();
@@ -15,15 +16,42 @@ export default function UploadFilesPage() {
   const { uploadedFiles } = useSelector((state: RootState) => state.files);
   
   useEffect(() => {
-    // Redirect if not authenticated or not admin
-    if (!isAuthenticated || !user?.isAdmin) {
+    // Redirect only if not authenticated
+    if (!isAuthenticated) {
       router.push('/signin');
+      return;
+    }
+
+    // Show toast if user is authenticated but not admin
+    if (isAuthenticated && !user?.isAdmin) {
+      toast.error('This feature is only available for administrators', {
+        duration: 5000,
+        position: 'top-center',
+      });
     }
   }, [isAuthenticated, user, router]);
   
-  // If not authenticated or not admin, don't render the page
-  if (!isAuthenticated || !user?.isAdmin) {
-    return null;
+  // If not authenticated, don't render anything (will redirect)
+  // if (!isAuthenticated) {
+  //   return null;
+  // }
+
+  // If authenticated but not admin, show message
+  if (!user?.isAdmin) {
+    return (
+      <main className="relative bg-gray-50 min-h-screen py-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center">
+            <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+              Access Restricted
+            </h1>
+            <p className="mt-4 text-lg text-gray-500">
+              The file management feature is only available for administrators.
+            </p>
+          </div>
+        </div>
+      </main>
+    );
   }
   
   return (
@@ -68,4 +96,4 @@ export default function UploadFilesPage() {
       </div>
     </main>
   );
-} 
+}
