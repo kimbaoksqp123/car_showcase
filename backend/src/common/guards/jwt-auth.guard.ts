@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Observable } from 'rxjs';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -35,7 +35,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   handleRequest(err, user, info) {
     // Xử lý lỗi xác thực
     if (err || !user) {
-      throw err || new UnauthorizedException('Authentication failed');
+      throw err || new UnauthorizedException('Authentication required');
     }
     return user;
   }
